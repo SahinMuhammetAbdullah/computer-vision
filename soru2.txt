@@ -1,0 +1,50 @@
+pkg load image; % image processing toolbox'u yükle
+
+% 1. Resmi oku
+img = imread('C:\Users\mabdu\Desktop\goru\rgbimage.png'); % 1024x1024 RGB bir resim olmalı
+
+% 2. Boyutları kontrol et
+[h, w, c] = size(img);
+if h != 1024 || w != 1024 || c != 3
+    error('Resim 1024x1024 boyutunda ve RGB (3 kanal) olmalıdır.');
+end
+
+% 3. 3x3 parçaya böl
+rows = 3;
+cols = 3;
+tile_h = h / rows;
+tile_w = w / cols;
+
+tiles = cell(rows * cols, 1); % parça listesi
+
+% Parçaları çıkar
+index = 1;
+for i = 0:(rows-1)
+    for j = 0:(cols-1)
+        tile = img((i*tile_h+1):((i+1)*tile_h), (j*tile_w+1):((j+1)*tile_w), :);
+        tiles{index} = tile;
+        index++;
+    end
+end
+
+% 4. 4 farklı rastgele bulmaca oluştur
+for n = 1:4
+    shuffled_tiles = tiles(randperm(9)); % parçaları karıştır
+
+    % Boş bir yeni resim oluştur
+    puzzle_img = uint8(zeros(h, w, 3));
+
+    % Karıştırılmış parçaları birleştir
+    index = 1;
+    for i = 0:(rows-1)
+        for j = 0:(cols-1)
+            puzzle_img((i*tile_h+1):((i+1)*tile_h), (j*tile_w+1):((j+1)*tile_w), :) = shuffled_tiles{index};
+            index++;
+        end
+    end
+
+    % Göster ve kaydet
+    figure;
+    imshow(puzzle_img);
+    imwrite(puzzle_img, sprintf('puzzle_%d.jpg', n));
+end
