@@ -46,6 +46,5 @@ for n = 1:4
     % Göster ve kaydet
     figure;
     imshow(puzzle_img);
-    imwrite(puzzle_img, sprintf('puzzle_%d.jpg', n));
 end
 
